@@ -1,4 +1,4 @@
-# mike babb
+# Mike Babb
 # April 26, 2021
 # intro to R studio
 
@@ -24,6 +24,7 @@ data()
 # we'll use the Motor Trend Car Road Tests datasets, mtcars
 head(mtcars)
 View(mtcars)
+help(mtcars)
 
 # how many rows and columns?
 nrow(mtcars)
@@ -33,14 +34,19 @@ ncol(mtcars)
 mean(mtcars$mpg)
 median(mtcars$mpg)
 
+mtcars$gear
+
+
 # we can chain functions together
-round(mean(mtcars$mpg), 1)
+round(mean(mtcars$mpg), 0)
 
 # let's do a simple cross tab of the number of cylinders by horsepower
 table(mtcars$cyl, mtcars$hp)
 
 # a basic graph of horsepower by mpg?
 plot(x=mtcars$hp, y=mtcars$mpg)
+hist(mtcars$mpg)
+help(hist)
 
 # add some additional information...
 help(plot)
@@ -70,15 +76,16 @@ sunique(mtcars$cyl)
 
 # let's add a vector to our mtcars data with the colors of interest
 # we'll start by assuming that all colors 
-mtcars$cyl_color <- rep(x = 'red', nrow(mtcars))
+mtcars$cyl_color <- rep(x = 'green', nrow(mtcars))
 mtcars$cyl_color[which(x=mtcars$cyl==6)] <- 'blue'
-mtcars$cyl_color[which(x=mtcars$cyl==8)] <- 'green'
+mtcars$cyl_color[which(x=mtcars$cyl==8)] <- 'red'
+View(mtcars)
 
 plot(x=mtcars$hp, y=mtcars$mpg,xlab = 'Horsepower', ylab = 'Miles Per Gallon',
      main = 'Miles per gallon vs. Horsepower, 1973 - 1974',
      type = 'p', pch = 19, col = mtcars$cyl_color)
 legend(x=250, y = 30, legend=c('4 Cylinders', '6 Cylinders', '8 Cylinders'),
-       col=c('red', 'blue', 'green'), pch = rep(19, 3))
+       col=c('green', 'blue', 'red'), pch = rep(19, 3))
 
 
 # let's use another graphing package to produce our plot
@@ -90,24 +97,23 @@ library(ggplot2)
 mtcars$cyl_factor <- factor(x=mtcars$cyl, levels = c(4,6,8), labels = c('4 Cylinders', '6 Cylinders', '8 Cylinders'))
 
 # basic colors
-my_colors <- c('red', 'blue', 'green')
+my_colors <- c('green', 'blue', 'red')
 # hundreds of named colors
 # https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf
 my_colors2 <- c('hotpink3', 'grey30', 'gold3')
 
 my_plot <- ggplot(data = mtcars, mapping=aes(x=hp, y = mpg, color = cyl_factor)) + 
-  geom_point(size = 6) +
-  scale_color_manual(values = my_colors2) +
+  geom_point(size = 4) +
+  scale_color_manual(values = rev(my_colors2)) +
   guides(color  = guide_legend(title = 'No. of Cylinders')) +
   ggtitle(label = 'Miles per gallon vs. Horsepower, 1973 - 1974') +
   theme_classic()
-
 my_plot
 # we've updated our mtcars data and build a plot, let's save it to disk in a place where we can access them later
 
-saveRDS(object = mtcars, file='my_mtcars.rds')
-write.csv(x=mtcars, file='my_mtcars.csv', row.names = FALSE)
-write.table(x=mtcars, file='my_mtcars.txt', sep = '\t', row.names = FALSE)
+saveRDS(object = mtcars, file='my_mtcars.rds') # save as rds
+write.csv(x=mtcars, file='my_mtcars.csv', row.names = FALSE) # save as a comma separated
+write.table(x=mtcars, file='my_mtcars.txt', sep = '\t', row.names = FALSE) # save as tab separated
 
 # save the plot
 png(file='hp_vs_mpg.png', width = 960, height = 640)
@@ -127,7 +133,4 @@ my_mtcars_txt <- read.table(file='my_mtcars.txt', sep = '\t',header = 1)
 head(my_mtcars_txt)
 
 original_mtcars <- mtcars
-
-
-  
 
