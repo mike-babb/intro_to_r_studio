@@ -8,6 +8,8 @@ rm(list=ls())
 # set the working directory
 setwd(dir='H:/temp')
 
+my_var <- 'blarcho'
+
 # create a vector
 first_vec <- c(1, 3, 5)
 first_vec
